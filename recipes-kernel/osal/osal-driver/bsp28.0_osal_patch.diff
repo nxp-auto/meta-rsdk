@@ -1,0 +1,34 @@
+diff --git a/build/LinuxKernelModule.mk b/build/LinuxKernelModule.mk
+old mode 100644
+new mode 100755
+index fe6e4f4..958cff9
+--- a/build/LinuxKernelModule.mk
++++ b/build/LinuxKernelModule.mk
+@@ -32,7 +32,7 @@ define call_kernel_makefile
+ 		DRIVER_BUILD_DIR="$(CURDIR)/" \
+ 		ENABLE_CODE_COVERAGE=$(ENABLE_CODE_COVERAGE) \
+ 		OAL_LDFLAGS="$(LDFLAGS)" \
+-		OAL_ROOT="$(DEV_ROOT_DIR)"
++		OAL_ROOT="$(DEV_ROOT_DIR)" $(1)
+ 
+ endef
+ 
+@@ -62,7 +62,7 @@ ifdef STATIC_LIB_NAME # Kernel library
+     lib-y               := $(OBJS)
+ else # Kernel Module
+     obj-m               += $(MODULE_NAME).o
+-    $(MODULE_NAME)-objs := $(OBJS)
++    $(MODULE_NAME)-objs := $(OBJS) /../../linux-write/build-linux-kernel/liboal_kernel.o
+     ldflags-y           := $(OAL_LDFLAGS)
+ endif
+ 
+@@ -116,6 +116,9 @@ clean:
+ 	@echo "	[CLN] $(CLEAN_OBJS)"
+ 	@rm -f $(CLEAN_OBJS) $(LOCAL_LOCK_FILE) || true
+ 
++modules_install:
++	$(call call_kernel_makefile, modules_install)
++
+ -include $(DEV_ROOT_DIR)/build/SourceDrop.mk
+ -include $(DEV_ROOT_DIR)/build/Install.mk
+ 
