@@ -1,0 +1,298 @@
+diff --git a/Makefile b/Makefile
+index 81011c92dd46..9bc208b7c2b5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -453,7 +453,7 @@ AWK		= awk
+ INSTALLKERNEL  := installkernel
+ DEPMOD		= depmod
+ PERL		= perl
+-PYTHON		= python
++PYTHON		= python3
+ PYTHON3		= python3
+ CHECK		= sparse
+ BASH		= bash
+diff --git a/arch/arm64/boot/dts/freescale/fsl-s32r45-evb.dts b/arch/arm64/boot/dts/freescale/fsl-s32r45-evb.dts
+index 2bd78390908f..38477b517e28 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-s32r45-evb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-s32r45-evb.dts
+@@ -18,8 +18,52 @@ aliases {
+ 	};
+ 
+ 	chosen {
++		linux,initrd-start = <0x84000000>;
++		linux,initrd-end = <0x8A000000>;
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	memory_DDR0@80000000 {
++		device_type = "memory";
++		reg = <0 0x80000000 0 0x40000000>;
++	};
++
++};
++
++&lax0 {
++	status = "okay";
++};
++
++&lax1 {
++	status = "okay";
++};
++
++&spt {
++	status = "okay";
++};
++
++&mipicsi2_0{
++	status = "okay";
++};
++
++&mipicsi2_1 {
++	status = "okay";
++};
++
++&mipicsi2_2 {
++	status = "okay";
++};
++
++&mipicsi2_3 {
++	status = "okay";
++};
++
++&cte {
++	status = "okay";
++};
++
++&rsdk_spi1 {
++	status = "okay";
+ };
+ 
+ &fxosc {
+@@ -591,7 +635,7 @@ &spi1 {
+ 
+ 	spidev10: spidev@0 {
+ 		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <10000000>;
++		spi-max-frequency = <40000000>;
+ 		reg = <0>;
+ 		fsl,spi-cs-sck-delay = <100>;
+ 		fsl,spi-sck-cs-delay = <100>;
+@@ -599,7 +643,7 @@ spidev10: spidev@0 {
+ 
+ 	spidev11: spidev@1 {
+ 		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <10000000>;
++		spi-max-frequency = <40000000>;
+ 		reg = <1>;
+ 		fsl,spi-cs-sck-delay = <100>;
+ 		fsl,spi-sck-cs-delay = <100>;
+@@ -701,6 +745,15 @@ fixed-link {
+ 		full-duplex;
+ 	};
+ };
++
++&pcie0 {
++	status = "okay";
++};
++
++&pcie1 {
++	status = "okay";
++};
++
+ &gpio1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpioeirq>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-s32r45.dtsi b/arch/arm64/boot/dts/freescale/fsl-s32r45.dtsi
+index d9530605f9cf..353102a5b880 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-s32r45.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-s32r45.dtsi
+@@ -215,6 +215,189 @@ gpio1: siul2-gpio1 {
+ 		};
+ 	};
+ 
++	rsdk_spi1: rsdk_spi@401D8000 {
++		compatible = "nxp,rsdk_spi";
++		reg = <0 0x401D8000 0 0x1000>;
++		
++		spidev-id  = <0>;
++		status = "disabled";
++	};
++
++	lax0: lax@0x44028000 {
++		compatible = "nxp,lax";
++		reg = <0 0x44028000 0 0x718>;
++
++		dbgregstart = <0x0 0x51101000>;
++		dbgreglen = <0x1000>;
++
++		laxdev-id  = <0>;
++		interrupts = <0 234 0x4>,
++					<0 233 0x4>;
++		status = "disabled";
++	};
++
++	lax1: lax@0x44029000 {
++		compatible = "nxp,lax";
++		reg = <0 0x44029000 0 0x718> ;
++
++		dbgregstart = <0x0 0x51101000> ;
++		dbgreglen = <0x1000>;
++
++		laxdev-id = <1>;
++		interrupts = <0 238 0x4>,
++					<0 232 0x4>;
++		status = "disabled";
++	};
++
++	spt: spt@0x44026000 {
++		compatible = "nxp,spt";
++		reg = <0 0x44026000 0 0x1000>;
++
++		sptdev-id  = <0>;
++		interrupts = <0 188 0x4>,
++					 <0 189 0x4>,
++					 <0 190 0x4>,
++					 <0 191 0x4>;
++		status = "disabled";
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		oalddr0_allocator_memory: oalddrmem0@0x8B000000 {
++			/* 500 MB */
++			reg = <0x0 0x8B000000 0x0 0x1F400000>;
++			no-map;
++		};
++
++		oal_sram_allocator: oal_sram_allocator@0x34000000 {
++			reg = <0x00 0x34000000 0x0 0x00700000>;
++			no-map;
++		};
++
++		oal_dsp_sram_allocator: oal_dsp_sram_allocator@0x34700000 {
++			reg = <0x00 0x34700000 0x0 0x00100000>;
++			no-map;
++		};
++
++		oal_dsp_tcm_allocator: oal_dsp_tcm_allocator@0x24140000 {
++			reg = <0x00 0x24140000 0x0 0x00060000>;
++			no-map;
++		};
++
++		oal_cb_ram_allocator: oal_cb_ram_allocator@0x28000000 {
++			reg = <0x00 0x28000000 0x0 0x00040000>;
++			no-map;
++		};
++	};
++
++	oalddrmem0: oalddrmem0@0x8B000000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x0 0x8B000000 0x0 0x1F400000>;
++		memory-region = <&oalddr0_allocator_memory>;
++		id = <0>;
++		align = <0x1000>;
++		autobalance;
++	};
++
++	oalmem0: oalmem0@0x34000000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x34000000 0x0 0x00700000>;
++		memory-region = <&oal_sram_allocator>;
++		id = <1>;
++		align = <0x1000>;
++		init;
++	};
++
++	oaldspsrammem0: oaldspsrammem0@0x34700000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x34700000 0x0 0x00100000>;
++		memory-region = <&oal_dsp_sram_allocator>;
++		id = <2>;
++		align = <0x100>;
++		init;
++	};
++
++	oaldsptcmmem0: oaldsptcmmem0@0x24140000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x24140000 0x0 0x00060000>;
++		memory-region = <&oal_dsp_tcm_allocator>;
++		id = <3>;
++		align = <0x100>;
++	};
++
++	oalcbrammem0: oalcbrammem0@0x28000000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x28000000 0x0 0x00040000>;
++		memory-region = <&oal_cb_ram_allocator>;
++		id = <4>;
++		align = <0x100>;
++	};
++
++	/* MIPI-CSI2_0 as in final model */
++	mipicsi2_0: mipicsi2@0x44018000 {
++		compatible = "nxp,mipicsi2";
++		reg = <0 0x44018000 0 0x2000>;
++
++		mipicsi2dev-id  = <0>;
++		interrupts = <0 176 0x4>,
++					 <0 177 0x4>,
++					 <0 178 0x4>,
++					 <0 179 0x4>;
++		status = "disabled";
++	};
++
++	/* MIPI-CSI2_1 as in final model */
++	mipicsi2_1: mipicsi2@0x44014000 {
++		compatible = "nxp,mipicsi2";
++		reg = <0 0x44014000 0 0x2000>;
++
++		mipicsi2dev-id  = <1>;
++		interrupts = <0 172 0x4>,
++					 <0 173 0x4>,
++					 <0 174 0x4>,
++					 <0 175 0x4>;
++		status = "disabled";
++	};
++
++	/* MIPI-CSI2_2 as in final model */
++	mipicsi2_2: mipicsi2@0x44020000 {
++		compatible = "nxp,mipicsi2";
++		reg = <0 0x44020000 0 0x2000>;
++
++		mipicsi2dev-id  = <2>;
++		interrupts = <0 184 0x4>,
++					 <0 185 0x4>,
++					 <0 186 0x4>,
++					 <0 187 0x4>;
++		status = "disabled";
++	};
++
++	/* MIPI-CSI2_3 as in final model */
++	mipicsi2_3: mipicsi2@0x4401c000 {
++		compatible = "nxp,mipicsi2";
++		reg = <0 0x4401c000 0 0x2000>;
++
++		mipicsi2dev-id  = <3>;
++		interrupts = <0 180 0x4>,
++					 <0 181 0x4>,
++					 <0 182 0x4>,
++					 <0 183 0x4>;
++		status = "disabled";
++	};
++
++	/* CTE as in final model */
++	cte: cte@0x44025000 {
++		compatible = "nxp,cte";
++		reg = <0 0x44025000 0 0x1000>;
++
++		ctedev-id  = <0>;
++		interrupts = <0 231 0x4>;
++		status = "disabled";
++	};
++
+ 	gmac1: ethernet@44010000 {
+ 		compatible = "fsl,s32cc-dwmac";
+ 		reg = <0x0 0x44010000 0x0 0x2000>, /* gmac IP */

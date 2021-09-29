@@ -1,0 +1,52 @@
+diff --git a/build/LinuxKernelModule.mk b/build/LinuxKernelModule.mk
+index fe6e4f4..477566f 100644
+--- a/build/LinuxKernelModule.mk
++++ b/build/LinuxKernelModule.mk
+@@ -30,12 +30,27 @@ define call_kernel_makefile
+ 		KCPPFLAGS="$(CFLGS)" \
+ 		ARCH=$(ARCH) \
+ 		DRIVER_BUILD_DIR="$(CURDIR)/" \
++		M="$(CURDIR)/" \
+ 		ENABLE_CODE_COVERAGE=$(ENABLE_CODE_COVERAGE) \
+ 		OAL_LDFLAGS="$(LDFLAGS)" \
+ 		OAL_ROOT="$(DEV_ROOT_DIR)"
+ 
+ endef
+ 
++define call_kernel_makefile_install
++	$(MAKE) -C $(KERNEL_DIR) \
++		KBUILD_EXTMOD="$(DRIVER_BUILD_DIR)/$(OBJDIR)/" \
++		KCPPFLAGS="$(CFLGS)" \
++		ARCH=$(ARCH) \
++		DRIVER_BUILD_DIR="$(CURDIR)/" \
++		M="$(CURDIR)/" \
++		ENABLE_CODE_COVERAGE=$(ENABLE_CODE_COVERAGE) \
++		OAL_LDFLAGS="$(LDFLAGS)" \
++		OAL_ROOT="$(DEV_ROOT_DIR)" \
++		modules_install
++
++endef
++
+ # Current dir
+ CDIR                := $(dir $(realpath $(lastword $(MAKEFILE_LIST) )))
+ VPATH               := $(addsuffix /, $(VPATH))
+@@ -106,7 +121,8 @@ endif
+ 	$(call call_kernel_makefile)
+ 	@echo "	[MV] lib.a -> lib$(STATIC_LIB_NAME).a"
+ 	@cp $(OBJDIR)/lib.a $(OBJDIR)/lib$(STATIC_LIB_NAME).o
+-	@mv $(OBJDIR)/lib.a $(OBJDIR)/lib$(STATIC_LIB_NAME).a
++	@cp $(OBJDIR)/lib.a $(OBJDIR)/lib$(STATIC_LIB_NAME).a
++	@cp $(OBJDIR)/.linux_device.o.cmd $(OBJDIR)/.lib$(STATIC_LIB_NAME).o.cmd
+ 
+ $(OAL_KERNEL_MODULE): FORCE $(_DEP_STATIC_LIBS) $(_INJECT_LIBRARY) | $(OBJDIR_MAKEFILE)
+ 	$(call call_kernel_makefile)
+@@ -116,6 +132,9 @@ clean:
+ 	@echo "	[CLN] $(CLEAN_OBJS)"
+ 	@rm -f $(CLEAN_OBJS) $(LOCAL_LOCK_FILE) || true
+ 
++modules_install:
++	$(call call_kernel_makefile_install)
++
+ -include $(DEV_ROOT_DIR)/build/SourceDrop.mk
+ -include $(DEV_ROOT_DIR)/build/Install.mk
+ 

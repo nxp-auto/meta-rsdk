@@ -14,7 +14,7 @@ require recipes-core/rsdk_env.inc
 # setup for CodeAurora
 URL = "git://source.codeaurora.org/external/autobsps32/extra/radar_drv;protocol=http"
 BRANCH = "master"
-SRCREV = "edc9cedb47d510d15a43539be749f9e766943cfa"
+SRCREV = "e29b73dd3ec7f3cf4cf3f1d99bbd67db4f6a1d09"
 SRC_URI = "${URL};branch=${BRANCH}"
 S = "${WORKDIR}/git"
 RSDK_PATH ?= "${S}"
@@ -25,6 +25,21 @@ export DESTDIR
 LOCAL_CONFIGDIR ?= "output"
 SRC_CONFIGDIR = "${THISDIR}/${LOCAL_CONFIGDIR}"
 export SRC_CONFIGDIR
+
+# patch for OAL make environment
+SRC_URI += "\
+    file://linux_5.10_osal_patch.diff \
+"
+
+# other patch definitions
+do_patch_drv[depends] = "quilt-native:do_populate_sysroot"
+
+addtask do_patch_drv after do_unpack before do_compile
+
+python do_patch_drv() {
+    bb.build.exec_func('patch_do_patch', d)
+}
+
 
 # specific module procedures
 python do_fetch() {

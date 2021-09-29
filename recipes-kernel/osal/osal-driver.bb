@@ -26,11 +26,6 @@ export CDEFS = " -DOAL_MAX_EVENTS_PER_SERVICE=64U -DOAL_MAX_PROCESS_COMM_SHARED_
 FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 LIC_FILES_CHKSUM = "file://${EXTERNALSRC}/COPYING.BSD;md5=c3f054326d84bba08b641ced67486a4c"
 
-# patch for OAL make environment
-#SRC_URI += "\
-#    file://bsp28.0_osal_patch.diff \
-#"
-
 
 # other patch definitions
 do_patch_drv[depends] = "quilt-native:do_populate_sysroot"

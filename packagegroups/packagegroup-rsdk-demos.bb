@@ -15,4 +15,3 @@ RDEPENDS_packagegroup-rsdk-demos = "\
 "
 
 # For the moment no applications included in yocto built
-#	csi-tester \
