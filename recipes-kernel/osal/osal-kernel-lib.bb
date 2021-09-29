@@ -31,16 +31,6 @@ SRC_URI += "\
     file://linux_5.10_osal_patch.diff \
 "
 
-# other patch definitions
-#do_patch_drv[depends] = "quilt-native:do_populate_sysroot"
-
-addtask do_patch_drv after do_unpack before do_compile
-
-python do_patch_drv() {
-    bb.build.exec_func('patch_do_patch', d)
-}
-
-
 # specific module procedures
 python do_fetch() {
     print("target : ", d.getVar('WORKDIR'))
