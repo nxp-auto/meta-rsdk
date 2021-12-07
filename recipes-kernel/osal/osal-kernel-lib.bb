@@ -14,7 +14,7 @@ require recipes-core/rsdk_env.inc
 # setup for CodeAurora
 URL = "git://source.codeaurora.org/external/autobsps32/extra/radar_drv;protocol=http"
 BRANCH = "master"
-SRCREV = "fd32bac916af41ee89a94d02787d147bae1099b7"
+SRCREV = "4e10482ee78f0e1db658f0b183c402635d97866c"
 SRC_URI = "${URL};branch=${BRANCH}"
 S = "${WORKDIR}/git"
 RSDK_PATH ?= "${S}"
