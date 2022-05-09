@@ -6,7 +6,7 @@
 DESCRIPTION = "RSDK LAX driver"
 LICENSE = "GPLv2"
 
-DEPENDS = "osal-driver"
+DEPENDS = "osal-kernel-lib"
 
 # include the general kernel build parameters
 require recipes-kernel/rsdk_kmod.inc
