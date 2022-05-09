@@ -1,7 +1,7 @@
-diff --git a/build/LinuxKernelModule.mk b/build/LinuxKernelModule.mk
+diff --git a/oal/build/LinuxKernelModule.mk b/oal/build/LinuxKernelModule.mk
 index fe6e4f4..cf06be4 100644
---- a/build/LinuxKernelModule.mk
-+++ b/build/LinuxKernelModule.mk
+--- a/oal/build/LinuxKernelModule.mk
++++ b/oal/build/LinuxKernelModule.mk
 @@ -30,12 +30,28 @@ define call_kernel_makefile
  		KCPPFLAGS="$(CFLGS)" \
  		ARCH=$(ARCH) \
