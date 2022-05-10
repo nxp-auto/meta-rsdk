@@ -7,7 +7,7 @@ DESCRIPTION = "RSDK CTE driver"
 LICENSE = "GPLv2"
 
 # to be built after OAL module
-DEPENDS = "osal-kernel-lib"
+DEPENDS = "osal-driver"
 
 # include the general kernel build parameters
 require recipes-kernel/rsdk_kmod.inc

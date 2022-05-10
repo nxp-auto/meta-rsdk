@@ -11,7 +11,7 @@ require recipes-kernel/rsdk_kmod.inc
 inherit module externalsrc
 
 # to be built after OAL module
-DEPENDS = "osal-kernel-lib"
+DEPENDS = "osal-driver"
 
 # EXTERNALSRC for CodeAurora recipe
 EXTERNALSRC := "${WORKDIR}/../../osal-kernel-lib/1.0-r0/git/SPT/SPT_driver/build/linux_kernel"
