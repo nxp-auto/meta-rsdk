@@ -11,7 +11,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 #   .diff = patch to the current Linux files (mainly dts/dtsi S32R45EVB files)
 SRC_URI += "\
     file://s32r45_updates_for_linux5.10.config \
-    file://bsp32_patch.diff \
+    file://bsp33_patch.diff \
 "
 
 # explicit Linux config changes to be added
