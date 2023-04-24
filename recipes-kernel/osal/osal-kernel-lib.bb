@@ -12,7 +12,7 @@ inherit module
 require recipes-core/rsdk_env.inc
 
 # setup for CodeAurora
-URL = "git://source.codeaurora.org/external/autobsps32/extra/radar_drv;protocol=http"
+URL = "git://github.com/nxp-auto/radar_prj;protocol=http"
 BRANCH = "master"
 SRCREV = "194bc6c5fc03c8215620320b84a0741d96e2a2c0"
 SRC_URI = "${URL};branch=${BRANCH}"
