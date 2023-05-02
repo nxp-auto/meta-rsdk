@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   BitBake layer description for O[S]AL driver
 #
 
@@ -14,7 +14,7 @@ DEPENDS = "osal-kernel-lib"
 # include the general rsdk kernel build parameters
 require recipes-core/rsdk_env.inc
 
-# EXTERNALSRC for CodeAurora processing
+# EXTERNALSRC for GitHub processing
 EXTERNALSRC := "${WORKDIR}/../../osal-kernel-lib/1.0-r0/git/oal"
 
 EXTERNALSRC_BUILD = "${EXTERNALSRC}/libs/kernel/driver/build-linux-kernel"

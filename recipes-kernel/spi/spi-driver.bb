@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   BitBake layer description for SPI driver
 #
 
@@ -13,7 +13,7 @@ DEPENDS = "osal-driver"
 require recipes-kernel/rsdk_kmod.inc
 inherit module externalsrc
 
-# EXTERNALSRC for CodeAurora recipe
+# EXTERNALSRC for GitHub recipe
 EXTERNALSRC := "${WORKDIR}/../../osal-kernel-lib/1.0-r0/git/RFE_abstract/SPI/SPI_driver_linux"
 EXTERNALSRC_BUILD := "${EXTERNALSRC}"
 
