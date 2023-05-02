@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   BitBake layer description for SPT driver
 #
 
@@ -11,9 +11,9 @@ require recipes-kernel/rsdk_kmod.inc
 inherit module externalsrc
 
 # to be built after OAL module
-DEPENDS = "osal-driver"
+DEPENDS = "osal-kernel-lib"
 
-# EXTERNALSRC for CodeAurora recipe
+# EXTERNALSRC for GitHub recipe
 EXTERNALSRC := "${WORKDIR}/../../osal-kernel-lib/1.0-r0/git/SPT/SPT_driver/build/linux_kernel"
 EXTERNALSRC_BUILD := "${EXTERNALSRC}"
 

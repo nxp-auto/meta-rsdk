@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   Definitions for rsdk-demo package
 #
 

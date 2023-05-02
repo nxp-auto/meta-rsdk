@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   BitBake layer description for CSI2 driver
 #
 
@@ -7,13 +7,13 @@ DESCRIPTION = "RSDK CSI2 driver"
 LICENSE = "GPLv2"
 
 # to be built after OAL module
-DEPENDS = "osal-driver"
+DEPENDS = "osal-kernel-lib"
 
 # include the general kernel build parameters
 require recipes-kernel/rsdk_kmod.inc
 inherit module externalsrc
 
-# EXTERNALSRC for CodeAurora processing
+# EXTERNALSRC for GitHub processing
 EXTERNALSRC := "${WORKDIR}/../../osal-kernel-lib/1.0-r0/git/CSI2/CSI2_driver"
 
 EXTERNALSRC_BUILD = "${EXTERNALSRC}"

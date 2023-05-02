@@ -1,17 +1,18 @@
-diff --git a/oal/build/LinuxKernelModule.mk b/oal/build/LinuxKernelModule.mk
-index fe6e4f4..cf06be4 100644
---- a/oal/build/LinuxKernelModule.mk
-+++ b/oal/build/LinuxKernelModule.mk
-@@ -30,12 +30,28 @@ define call_kernel_makefile
+diff --git a/build/LinuxKernelModule.mk b/build/LinuxKernelModule.mk
+index fe6e4f4..50fd5ff 100644
+--- a/build/LinuxKernelModule.mk
++++ b/build/LinuxKernelModule.mk
+@@ -29,13 +29,29 @@ define call_kernel_makefile
+ 		KBUILD_EXTMOD="$(DRIVER_BUILD_DIR)/$(OBJDIR)/" \
  		KCPPFLAGS="$(CFLGS)" \
  		ARCH=$(ARCH) \
- 		DRIVER_BUILD_DIR="$(CURDIR)/" \
 +		M="$(CURDIR)/" \
 +		CAPATH="$(CURDIR)/" \
+ 		DRIVER_BUILD_DIR="$(CURDIR)/" \
  		ENABLE_CODE_COVERAGE=$(ENABLE_CODE_COVERAGE) \
  		OAL_LDFLAGS="$(LDFLAGS)" \
  		OAL_ROOT="$(DEV_ROOT_DIR)"
- 
+-
  endef
  
 +define call_kernel_makefile_install
@@ -26,7 +27,8 @@ index fe6e4f4..cf06be4 100644
 +		OAL_ROOT="$(DEV_ROOT_DIR)" \
 +		modules_install
 +
-+endef
++    endef
++
 +
  # Current dir
  CDIR                := $(dir $(realpath $(lastword $(MAKEFILE_LIST) )))
@@ -51,13 +53,12 @@ index fe6e4f4..cf06be4 100644
  
  $(OAL_KERNEL_MODULE): FORCE $(_DEP_STATIC_LIBS) $(_INJECT_LIBRARY) | $(OBJDIR_MAKEFILE)
  	$(call call_kernel_makefile)
-@@ -116,6 +134,10 @@ clean:
+@@ -116,6 +134,9 @@ clean:
  	@echo "	[CLN] $(CLEAN_OBJS)"
  	@rm -f $(CLEAN_OBJS) $(LOCAL_LOCK_FILE) || true
  
 +modules_install:
 +	$(call call_kernel_makefile_install)
-+
 +
  -include $(DEV_ROOT_DIR)/build/SourceDrop.mk
  -include $(DEV_ROOT_DIR)/build/Install.mk

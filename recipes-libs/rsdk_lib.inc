@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   BitBake general layer parameters for rsdk libraries build
 #   For the current recipe the libraries are not built, because of the used compilers :
 #   gcc 10.2 for Linux/modules and gcc 9.2 for libraries/applications

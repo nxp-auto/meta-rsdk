@@ -1,5 +1,5 @@
 #
-#   Copyright 2021 NXP
+#   Copyright 2021-2023 NXP
 #   BitBake layer description for O[S]AL kernel library
 #
 
@@ -11,10 +11,10 @@ inherit module
 # include the general rsdk kernel build parameters
 require recipes-core/rsdk_env.inc
 
-# setup for CodeAurora
+# setup for GitHub
 URL = "git://github.com/nxp-auto/radar_prj;protocol=http"
 BRANCH = "master"
-SRCREV = "194bc6c5fc03c8215620320b84a0741d96e2a2c0"
+SRCREV = "c738ac4b526952951c29523a819deffd6da98f40"
 SRC_URI = "${URL};branch=${BRANCH}"
 S = "${WORKDIR}/git"
 RSDK_PATH ?= "${S}"
