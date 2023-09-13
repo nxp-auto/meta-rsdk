@@ -9,10 +9,10 @@ DESCRIPTION = "Custom list of packages for build rSDK package"
 # all defined packages to be appended
 
 # general package
-IMAGE_INSTALL_append = " packagegroup-fsl-rsdk"
+IMAGE_INSTALL:append = " packagegroup-fsl-rsdk"
 
 # drivers/modules package
-IMAGE_INSTALL_append = " packagegroup-rsdk-drivers"
+IMAGE_INSTALL:append = " packagegroup-rsdk-drivers"
 
 # demos package
-IMAGE_INSTALL_append = " packagegroup-rsdk-demos"
+IMAGE_INSTALL:append = " packagegroup-rsdk-demos"

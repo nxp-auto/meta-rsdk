@@ -4,7 +4,7 @@
 #
 
 DESCRIPTION = "RSDK SPT driver"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 # include the general kernel build parameters
 require recipes-kernel/rsdk_kmod.inc

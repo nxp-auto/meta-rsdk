@@ -1,8 +1,8 @@
 diff --git a/arch/arm64/boot/dts/freescale/s32r45-evb.dts b/arch/arm64/boot/dts/freescale/s32r45-evb.dts
-index 2bfde52e55a0..c3cbd0452d48 100644
+index d74971a208a9..d6f3ab53d0e5 100644
 --- a/arch/arm64/boot/dts/freescale/s32r45-evb.dts
 +++ b/arch/arm64/boot/dts/freescale/s32r45-evb.dts
-@@ -618,7 +618,7 @@ &spi1 {
+@@ -623,7 +623,7 @@ &spi1 {
  
  	spidev10: spidev@0 {
  		compatible = "rohm,dh2228fv";
@@ -11,7 +11,7 @@ index 2bfde52e55a0..c3cbd0452d48 100644
  		reg = <0>;
  		fsl,spi-cs-sck-delay = <100>;
  		fsl,spi-sck-cs-delay = <100>;
-@@ -626,7 +626,7 @@ spidev10: spidev@0 {
+@@ -631,7 +631,7 @@ spidev10: spidev@0 {
  
  	spidev11: spidev@1 {
  		compatible = "rohm,dh2228fv";
@@ -20,7 +20,7 @@ index 2bfde52e55a0..c3cbd0452d48 100644
  		reg = <1>;
  		fsl,spi-cs-sck-delay = <100>;
  		fsl,spi-sck-cs-delay = <100>;
-@@ -642,7 +642,7 @@ &spi2 {
+@@ -647,7 +647,7 @@ &spi2 {
  
  	spidev20: spidev@0 {
  		compatible = "rohm,dh2228fv";
@@ -29,7 +29,7 @@ index 2bfde52e55a0..c3cbd0452d48 100644
  		reg = <0>;
  		fsl,spi-cs-sck-delay = <100>;
  		fsl,spi-sck-cs-delay = <100>;
-@@ -650,7 +650,7 @@ spidev20: spidev@0 {
+@@ -655,7 +655,7 @@ spidev20: spidev@0 {
  
  	spidev21: spidev@1 {
  		compatible = "rohm,dh2228fv";
@@ -39,18 +39,18 @@ index 2bfde52e55a0..c3cbd0452d48 100644
  		fsl,spi-cs-sck-delay = <100>;
  		fsl,spi-sck-cs-delay = <100>;
 diff --git a/arch/arm64/boot/dts/freescale/s32r45.dtsi b/arch/arm64/boot/dts/freescale/s32r45.dtsi
-index b8aec77deca7..8476ff5e6239 100644
+index 866bbf9a71f4..4e2e992dc6de 100644
 --- a/arch/arm64/boot/dts/freescale/s32r45.dtsi
 +++ b/arch/arm64/boot/dts/freescale/s32r45.dtsi
 @@ -11,6 +11,7 @@
  #include "s32cc.dtsi"
- #include <dt-bindings/ddr-errata/s32-ddr-errata.h>
  #include <dt-bindings/clock/s32r45-scmi-clock.h>
+ #include <dt-bindings/mux/nxp-s32r45-can-ts.h>
 +#include <dt-bindings/reset/s32r45-scmi-reset.h>
  
  / {
  	compatible = "nxp,s32r45";
-@@ -212,6 +213,223 @@ gmac1_mdio: mdio0 {
+@@ -257,6 +258,215 @@ gmac1_mdio: mdio0 {
  			};
  		};
  	};
@@ -181,12 +181,10 @@ index b8aec77deca7..8476ff5e6239 100644
 +		compatible = "nxp,mipicsi2";
 +		reg = <0 0x44018000 0 0x2000>;
 +
-+		clocks = <&clks S32GEN1_SCMI_CLK_FTM0_SYS>,
-+			<&clks S32GEN1_CLK_FXOSC>,
-+			<&clks S32GEN1_CLK_XBAR>,
-+			<&clks S32GEN1_CLK_XBAR_DIV3>;
-+		clock-names = "csi2_dphy_clk", "csi2_pll_clk", 
-+			"csi2_module_clk", "csi2_ctrl_clk";
++		clocks = <&clks S32CC_SCMI_CLK_FTM0_SYS>,
++			<&clks S32CC_SCMI_CLK_I2C_MODULE>;
++		clock-names = "csi2_dphy_clk",
++			"csi2_module_clk";
 +
 +		mipicsi2dev-id  = <0>;
 +		interrupts = <0 176 0x4>,
@@ -201,12 +199,10 @@ index b8aec77deca7..8476ff5e6239 100644
 +		compatible = "nxp,mipicsi2";
 +		reg = <0 0x44014000 0 0x2000>;
 +
-+		clocks = <&clks S32GEN1_SCMI_CLK_FTM0_SYS>,
-+			<&clks S32GEN1_CLK_FXOSC>,
-+			<&clks S32GEN1_CLK_XBAR>,
-+			<&clks S32GEN1_CLK_XBAR_DIV3>;
-+		clock-names = "csi2_dphy_clk", "csi2_pll_clk", 
-+			"csi2_module_clk", "csi2_ctrl_clk";
++		clocks = <&clks S32CC_SCMI_CLK_FTM0_SYS>,
++			<&clks S32CC_SCMI_CLK_I2C_MODULE>;
++		clock-names = "csi2_dphy_clk",
++			"csi2_module_clk";
 +
 +		mipicsi2dev-id  = <1>;
 +		interrupts = <0 172 0x4>,
@@ -221,12 +217,10 @@ index b8aec77deca7..8476ff5e6239 100644
 +		compatible = "nxp,mipicsi2";
 +		reg = <0 0x44020000 0 0x2000>;
 +
-+		clocks = <&clks S32GEN1_SCMI_CLK_FTM0_SYS>,
-+			<&clks S32GEN1_CLK_FXOSC>,
-+			<&clks S32GEN1_CLK_XBAR>,
-+			<&clks S32GEN1_CLK_XBAR_DIV3>;
-+		clock-names = "csi2_dphy_clk", "csi2_pll_clk", 
-+			"csi2_module_clk", "csi2_ctrl_clk";
++		clocks = <&clks S32CC_SCMI_CLK_FTM0_SYS>,
++			<&clks S32CC_SCMI_CLK_I2C_MODULE>;
++		clock-names = "csi2_dphy_clk",
++			"csi2_module_clk";
 +
 +		mipicsi2dev-id  = <2>;
 +		interrupts = <0 184 0x4>,
@@ -241,12 +235,10 @@ index b8aec77deca7..8476ff5e6239 100644
 +		compatible = "nxp,mipicsi2";
 +		reg = <0 0x4401c000 0 0x2000>;
 +
-+		clocks = <&clks S32GEN1_SCMI_CLK_FTM0_SYS>,
-+			<&clks S32GEN1_CLK_FXOSC>,
-+			<&clks S32GEN1_CLK_XBAR>,
-+			<&clks S32GEN1_CLK_XBAR_DIV3>;
-+		clock-names = "csi2_dphy_clk", "csi2_pll_clk", 
-+			"csi2_module_clk", "csi2_ctrl_clk";
++		clocks = <&clks S32CC_SCMI_CLK_FTM0_SYS>,
++			<&clks S32CC_SCMI_CLK_I2C_MODULE>;
++		clock-names = "csi2_dphy_clk",
++			"csi2_module_clk";
 +
 +		mipicsi2dev-id  = <3>;
 +		interrupts = <0 180 0x4>,
@@ -261,8 +253,8 @@ index b8aec77deca7..8476ff5e6239 100644
 +		compatible = "nxp,cte";
 +		reg = <0 0x44025000 0 0x1000>;
 +
-+		clocks = <&clks S32GEN1_CLK_XBAR_DIV3>,
-+			<&clks S32GEN1_SCMI_CLK_FTM0_SYS>;
++		clocks = <&clks S32CC_SCMI_CLK_FTM0_SYS>,
++			<&clks S32CC_SCMI_CLK_I2C_MODULE>;
 +		clock-names = "cte_reg_clk", "cte_clk";
 +
 +		ctedev-id  = <0>;
@@ -274,7 +266,7 @@ index b8aec77deca7..8476ff5e6239 100644
  };
  
  &ddr_errata {
-@@ -223,6 +441,42 @@ &pcie0 {
+@@ -268,6 +478,42 @@ &pcie0 {
  	status = "okay";
  };
  
@@ -317,9 +309,9 @@ index b8aec77deca7..8476ff5e6239 100644
  &pcie1 {
  	interrupts =  <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
  			<GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-@@ -243,3 +497,7 @@ &pcie1 {
- 				<0 0 0 4 &gic 0 0 0 216 4>;
- 	msi-parent = <&gic>;
+@@ -359,3 +605,7 @@ &stm7 {
+ &can_ts_ctrl {
+ 	idle-states = <S32R45_CAN_TS_STM7>;
  };
 +
 +&pcie1 {

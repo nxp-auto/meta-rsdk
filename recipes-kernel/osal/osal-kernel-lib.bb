@@ -5,7 +5,7 @@
 
 # General parameters
 DESCRIPTION = "OSAL Linux Kernel Library"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 inherit module
 
 # include the general rsdk kernel build parameters
@@ -14,7 +14,7 @@ require recipes-core/rsdk_env.inc
 # setup for GitHub
 URL = "git://github.com/nxp-auto/radar_prj;protocol=http"
 BRANCH = "master"
-SRCREV = "c738ac4b526952951c29523a819deffd6da98f40"
+SRCREV = "4e9039bc4711c9c83ddf1f0d58bd5b219a5993f3"
 SRC_URI = "${URL};branch=${BRANCH}"
 S = "${WORKDIR}/git"
 RSDK_PATH ?= "${S}"
@@ -28,7 +28,7 @@ export SRC_CONFIGDIR
 
 # patch for OAL make environment
 SRC_URI += "\
-    file://linux_5.10_osal_patch.diff \
+file://linux_5.15_osal_patch.diff \
 "
 
 # specific module procedures

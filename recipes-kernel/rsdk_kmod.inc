@@ -11,7 +11,8 @@ inherit module kernel-module-split pkgconfig
 
 # the kernel modules need osal/oal kernel library
 DEPENDS += "osal-kernel-lib"
-LIC_FILES_CHKSUM ?= "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
+LIC_FILES_CHKSUM ?= "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
+
 
 # other supplementary parametrs for make module command
 EXTRA_OEMAKE += "PLATFORM=S32R45 \

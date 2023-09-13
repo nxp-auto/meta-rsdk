@@ -4,7 +4,7 @@
 #
 
 DESCRIPTION = "OS Abstraction Layer driver"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 inherit module
 inherit externalsrc
 

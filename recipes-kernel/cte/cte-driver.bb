@@ -4,7 +4,7 @@
 #
 
 DESCRIPTION = "RSDK CTE driver"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 # to be built after OAL module
 DEPENDS = "osal-driver"
