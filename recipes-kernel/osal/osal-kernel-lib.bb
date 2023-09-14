@@ -13,7 +13,7 @@ require recipes-core/rsdk_env.inc
 
 # setup for GitHub
 URL = "git://github.com/nxp-auto/radar_prj;protocol=http"
-BRANCH = "master"
+BRANCH = "release/1.2.0"
 SRCREV = "4e9039bc4711c9c83ddf1f0d58bd5b219a5993f3"
 SRC_URI = "${URL};branch=${BRANCH}"
 S = "${WORKDIR}/git"
