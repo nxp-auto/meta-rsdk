@@ -1,0 +1,12 @@
+diff --git a/drivers/nxp/s32/clk/enable_clk.c b/drivers/nxp/s32/clk/enable_clk.c
+index 5f9021e95..ab17a28fb 100644
+--- a/drivers/nxp/s32/clk/enable_clk.c
++++ b/drivers/nxp/s32/clk/enable_clk.c
+@@ -148,7 +148,6 @@ int s32gen1_disable_partition(struct s32gen1_clk_priv *priv,
+ 	if (clken) {
+ 		WARN("Trying to disable partition %" PRIu32 " with enabled clocks 0x%" PRIx32 "\n",
+ 		      partition_n, clken);
+-		return 0;
+ 	}
+ 
+ 	/* Unlock RDC register write */
