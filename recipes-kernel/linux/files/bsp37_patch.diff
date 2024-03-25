@@ -39,7 +39,7 @@ index d74971a208a9..d6f3ab53d0e5 100644
  		fsl,spi-cs-sck-delay = <100>;
  		fsl,spi-sck-cs-delay = <100>;
 diff --git a/arch/arm64/boot/dts/freescale/s32r45.dtsi b/arch/arm64/boot/dts/freescale/s32r45.dtsi
-index 866bbf9a71f4..4e2e992dc6de 100644
+index 866bbf9a71f4..3aaa4f5778cb 100644
 --- a/arch/arm64/boot/dts/freescale/s32r45.dtsi
 +++ b/arch/arm64/boot/dts/freescale/s32r45.dtsi
 @@ -11,6 +11,7 @@
@@ -50,7 +50,7 @@ index 866bbf9a71f4..4e2e992dc6de 100644
  
  / {
  	compatible = "nxp,s32r45";
-@@ -257,6 +258,215 @@ gmac1_mdio: mdio0 {
+@@ -257,6 +258,218 @@ gmac1_mdio: mdio0 {
  			};
  		};
  	};
@@ -73,6 +73,9 @@ index 866bbf9a71f4..4e2e992dc6de 100644
 +
 +		clocks = <&clks S32R45_SCMI_CLK_LAX_MODULE>;
 +		clock-names = "lax_module_clk";
++
++		resets = <&reset S32R45_SCMI_RST_LAX>;
++		reset-names = "lax_reset";
 +
 +		laxdev-id  = <0>;
 +		interrupts = <0 234 0x4>,
@@ -266,7 +269,7 @@ index 866bbf9a71f4..4e2e992dc6de 100644
  };
  
  &ddr_errata {
-@@ -268,6 +478,42 @@ &pcie0 {
+@@ -268,6 +481,42 @@ &pcie0 {
  	status = "okay";
  };
  
@@ -309,7 +312,7 @@ index 866bbf9a71f4..4e2e992dc6de 100644
  &pcie1 {
  	interrupts =  <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
  			<GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-@@ -359,3 +605,7 @@ &stm7 {
+@@ -359,3 +608,7 @@ &stm7 {
  &can_ts_ctrl {
  	idle-states = <S32R45_CAN_TS_STM7>;
  };
