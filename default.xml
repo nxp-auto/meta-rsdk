@@ -7,21 +7,21 @@
   <remote fetch="https://github.com/nxp-qoriq" name="qoriq"/>
 
   <!-- The default revision and remote are applicable to the meta-alb layer -->
-  <default sync-j="2" revision="631692274bab3d986b3ffec0389b8cdb20f956bc" remote="alb"/>
+  <default sync-j="2" revision="0c71e867f67c5a175580ae467a7fb6721fe68d69" remote="alb"/>
 
   <project name="meta-alb" path="sources/meta-alb">
     <copyfile dest="nxp-setup-alb.sh"    src="nxp-setup-alb.sh"/>
   </project>
 
   <!-- projects below synchronized with default.xml in LFAC -->
-  <project name="meta-freescale" path="sources/meta-freescale" remote="yocto" revision="82cbf4e5adac1017adc1e4a2ce056c57b3148ba0"/>
+  <project name="meta-freescale" path="sources/meta-freescale" remote="yocto" revision="c525e0c19bdc46d45f71873b5f286f49abb69418"/>
   <project name="meta-python2" path="sources/meta-openembedded/meta-python2" remote="oe" revision="f02882e2aa9279ca7becca8d0cedbffe88b5a253"/>
-  <project name="meta-security" path="sources/meta-security" remote="yocto" revision="cc20e2af2ae1c74e306f6c039c4963457c4cbd0f"/>
-  <project name="meta-virtualization" path="sources/meta-virtualization" remote="yocto" revision="bfa6727718bc4eb550c24e2c03a4118b4e7bc842"/>
-  <project name="meta-openembedded" path="sources/meta-openembedded" remote="oe" revision="571e36e20e9d1f27af0eb4545291beeb64f280e2"/>
-  <project name="poky" path="sources/poky" remote="yocto" revision="65dafea22018052fe7b2e17e6e4d7eb754224d38"/>
+  <project name="meta-security" path="sources/meta-security" remote="yocto" revision="353078bc06c8b471736daab6ed193e30d533d1f1"/>
+  <project name="meta-virtualization" path="sources/meta-virtualization" remote="yocto" revision="e0cd09e3b8367e2745a27db2e7ff1f8452c8cf41"/>
+  <project name="meta-openembedded" path="sources/meta-openembedded" remote="oe" revision="dd3d2293ffdf2559f8a433f241765a8ab50cd085"/>
+  <project name="poky" path="sources/poky" remote="yocto" revision="4cdc553814640851cce85f84ee9c0b58646cd33b"/>
 
   <!-- projects below are not updated for gatesgarth -->
-  <project name="meta-qoriq" path="sources/meta-qoriq" remote="qoriq" revision="afaef5e29b0d5cb8a0f59c62bf9cbd44140b041e"/>
+  <project name="meta-qoriq" path="sources/meta-qoriq" remote="qoriq" revision="f1b87b247b1dbd9392e421b82ece1d91408fef8b"/>
 
   </manifest>
