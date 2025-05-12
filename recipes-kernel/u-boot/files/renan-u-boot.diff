@@ -1,0 +1,163 @@
+diff --git a/arch/arm/mach-s32/s32-cc/Makefile b/arch/arm/mach-s32/s32-cc/Makefile
+index 188526eda1..c8a0f60a74 100644
+--- a/arch/arm/mach-s32/s32-cc/Makefile
++++ b/arch/arm/mach-s32/s32-cc/Makefile
+@@ -21,13 +21,19 @@ ifdef CONFIG_SPI_FLASH_STMICRO
+ QSPI_MEMORY = MT35XU512ABA
+ endif
+ 
++ifdef CONFIG_SPI_FLASH_ISSI
++QSPI_MEMORY = IS25WP256
++endif
++
+ QSPI_PARAMS_FILE ?= qspi_params_$(QSPI_MEMORY).bin
+ 
+ s32cc_qspiparams-objs := tools/micron_params.o \
+ 	tools/macronix_params.o \
++	tools/issi_qspi_params.o \
+ 	tools/qspiparams.o
+ HOSTCFLAGS_macronix_params.o += -Itools/
+ HOSTCFLAGS_micron_params.o += -Itools/
++HOSTCFLAGS_issi_qspi_params.o += -Itools/
+ HOSTCFLAGS_qspiparams.o += -Itools/
+ hostprogs-y += s32cc_qspiparams
+ always := $(hostprogs-y)
+diff --git a/arch/arm/mach-s32/s32-cc/s32cc.cfg b/arch/arm/mach-s32/s32-cc/s32cc.cfg
+index 8f573f0d16..88ab69cb4c 100644
+--- a/arch/arm/mach-s32/s32-cc/s32cc.cfg
++++ b/arch/arm/mach-s32/s32-cc/s32cc.cfg
+@@ -24,6 +24,10 @@
+ #define PATH_QSPI_PARAMS_FILE qspi_params_MT35XU512ABA.bin
+ #endif
+ 
++#ifdef CONFIG_SPI_FLASH_ISSI
++#define PATH_QSPI_PARAMS_FILE qspi_params_IS25WP256.bin
++#endif
++
+ /**
+  * Boot device: sd/qspi
+  */
+@@ -141,7 +145,7 @@ RSRVD_SRAM 0x38008000 0x38079c00
+ RSRVD_SRAM 0x34002000 0x34003000
+ RSRVD_SRAM 0x38002000 0x38003000
+ #else
+-RSRVD_SRAM 0x34008000 0x34078000
++RSRVD_SRAM 0x34000000 0x34000fff
+ RSRVD_SRAM 0x38008000 0x38078000
+ RSRVD_SRAM 0x343ff000 0x34400000
+ RSRVD_SRAM 0x383ff000 0x38400000
+diff --git a/arch/arm/mach-s32/s32-cc/tools/issi_qspi_params.c b/arch/arm/mach-s32/s32-cc/tools/issi_qspi_params.c
+new file mode 100644
+index 0000000000..4f229ebb58
+--- /dev/null
++++ b/arch/arm/mach-s32/s32-cc/tools/issi_qspi_params.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0+
++/* Copyright 2019-2022 NXP */
++
++#include <s32cc_image_params.h>
++
++
++static struct qspi_params issi_qspi_conf = {
++	.header   = 0x5a5a5a5a,
++	.mcr      = 0x010F004C,
++	.flshcr   = 0x00000303,
++	.bufgencr = 0x00000000,
++	.dllcr    = 0x00000006,  //7
++	.paritycr = 0x00000000, 
++	.sfacr    = 0x00000800,
++	.smpr     = 0x00000020,  //0
++	.dlcr     = 0x40ff40ff,
++	.sflash_1_size = 0x20000000,
++	.sflash_2_size = 0x20000000,
++	.dlpr = 0xaa553443,
++	.sfar = 0x00000000,
++	.ipcr = 0x00000000,
++	.tbdr = 0x00000000,
++	.dll_bypass_en   = 0x00,
++	.dll_slv_upd_en  = 0x00,
++	.dll_auto_upd_en = 0x00,
++	.ipcr_trigger_en = 0x00,
++	.sflash_clk_freq = 166,
++	.reserved = {0x00, 0x00, 0x00},
++	/* ISSI read - FastRead 3bytes Addressing Mode */
++	.command_seq = {0x0818040B, 
++			0x1C800C08,
++			0x00000000,
++			},
++	.writes = { },
++		
++};
++
++struct qspi_params *get_issi_qspi_conf(void)
++{
++	return &issi_qspi_conf;
++}
+diff --git a/arch/arm/mach-s32/s32-cc/tools/qspiparams.c b/arch/arm/mach-s32/s32-cc/tools/qspiparams.c
+index 0537cf4648..549967d263 100644
+--- a/arch/arm/mach-s32/s32-cc/tools/qspiparams.c
++++ b/arch/arm/mach-s32/s32-cc/tools/qspiparams.c
+@@ -15,12 +15,14 @@
+ enum qspi_memory {
+ 	MX25UW51245G,
+ 	MT35XU512ABA,
++	IS25WP256,
+ 	INVALID_QSPI_MEM,
+ };
+ 
+ static const char * const mem_names[] = {
+ 	[MX25UW51245G] = str(MX25UW51245G),
+ 	[MT35XU512ABA] = str(MT35XU512ABA),
++	[IS25WP256] = str(IS25WP256),
+ };
+ 
+ static const unsigned int allowed_freqs[] = {100, 133, 166, 200};
+@@ -118,6 +120,9 @@ int main(int argc, char **argv)
+ 	case MT35XU512ABA:
+ 		params = get_micron_qspi_conf();
+ 		break;
++	case IS25WP256:
++		params = get_issi_qspi_conf();
++		break;
+ 	default:
+ 		fprintf(stderr,
+ 			"-m argument is incorrect or is missing\n");
+diff --git a/arch/arm/mach-s32/s32r45/Kconfig b/arch/arm/mach-s32/s32r45/Kconfig
+index 396a02af2c..0d5dd09329 100644
+--- a/arch/arm/mach-s32/s32r45/Kconfig
++++ b/arch/arm/mach-s32/s32r45/Kconfig
+@@ -42,7 +42,7 @@ config TARGET_S32R45RENAN
+ 	imply PHY_XWAY
+ 	select ID_EEPROM
+ 	select BOARD_EARLY_INIT_R
+-
++	select SPI_FLASH_ISSI
+ config TARGET_S32R45EMU
+ 	bool "Support S32R45 ZeBu"
+ 	select TARGET_TYPE_S32CC_EMULATOR
+diff --git a/configs/s32r45renan_qspi_defconfig b/configs/s32r45renan_qspi_defconfig
+new file mode 100644
+index 0000000000..663047dc5e
+--- /dev/null
++++ b/configs/s32r45renan_qspi_defconfig
+@@ -0,0 +1,9 @@
++CONFIG_ARM=y
++CONFIG_ARCH_S32R45=y
++CONFIG_TARGET_S32R45RENAN=y
++CONFIG_QSPI_BOOT=y
++CONFIG_CUSTOM_SYS_TEXT_BASE=y
++CONFIG_SYS_TEXT_BASE=0xb78a0000
++CONFIG_CUSTOM_SYS_DATA_BASE=y
++CONFIG_SYS_DATA_BASE=0xb7800000
++CONFIG_SPI_FLASH_ISSI=y
+diff --git a/tools/s32cc_image_params.h b/tools/s32cc_image_params.h
+index d4ca82425e..f7df584fc7 100644
+--- a/tools/s32cc_image_params.h
++++ b/tools/s32cc_image_params.h
+@@ -55,5 +55,5 @@ struct qspi_params {
+ 
+ struct qspi_params *get_macronix_qspi_conf(void);
+ struct qspi_params *get_micron_qspi_conf(void);
+-
++struct qspi_params *get_issi_qspi_conf(void);
+ #endif /* IMAGE_QSPI_PARAMS_H */

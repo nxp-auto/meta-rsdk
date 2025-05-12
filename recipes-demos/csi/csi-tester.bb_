@@ -1,0 +1,15 @@
+#
+#   Copyright 2021 NXP
+#   CSI2 tester recipe
+#   The application is not included into the image, so the file is renamed to .bb_ to not be processed by bitbake.
+#
+DESCRIPTION = "CSI Tester"
+
+require recipes-demos/rsdk_demo.inc
+
+# dependencies for CSI2 tester, but not processed at run-time
+DEPENDS += "csi2-lib osal-user-lib"
+
+EXTERNALSRC := "${RSDK_PATH}/CSI2/CSI2_tester/src/linux"
+RSDK_BIN_DIR = "."
+RSDK_BIN = "rsdk_csi2_linux_tester"

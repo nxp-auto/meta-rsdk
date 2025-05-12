@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<manifest>
-	<include name="default.xml" />
-    <remote fetch="ssh://git@bitbucket.sw.nxp.com/~nxa07457" name="rsdk-ca"/>
-	<project remote="rsdk-ca" revision="48a1cc5bd49f6d796c5aa7f30508303b3171cf47" name="meta-rsdk" path="sources/meta-rsdk"/>
-</manifest>

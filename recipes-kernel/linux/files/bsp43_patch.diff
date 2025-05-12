@@ -1,0 +1,650 @@
+diff --git a/arch/arm64/boot/dts/freescale/s32cc-nxp-flash-issi.dtsi b/arch/arm64/boot/dts/freescale/s32cc-nxp-flash-issi.dtsi
+new file mode 100755
+index 000000000000..e2485a7ff10d
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/s32cc-nxp-flash-issi.dtsi
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright 2022 NXP
++ */
++
++&qspi {
++	issi_memory: is25wp256@0 {
++		compatible = "jedec,spi-nor";
++		spi-max-frequency = <200000000>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <1>;
++		reg = <0>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			flashimage@0 {
++				label = "Flash-Image";
++				reg = <0x0 0x2000000>;
++			};
++
++			boot@0 {
++		         	label = "BL2";
++				reg = <0x0 0xd0000>;
++			};
++
++			fip@d0000 {
++				label = "FIP";
++				reg = <0xd0000 0x1e0000>;
++			};
++
++			boot-env@1e0000 {
++				label = "U-Boot-Env";
++				reg = <0x1e0000 0x10000>;
++			};
++
++			kernel@1f0000 {
++				label = "Kernel";
++				reg = <0x1f0000 0x1300000>;
++			};
++
++			dtb@ff0000 {
++				label = "DTB";
++				reg = <0x14f0000 0x100000>;
++			};
++
++			rootfs@10f0000 {
++				label = "Rootfs";
++				reg = <0x15f0000 0xA10000>;
++			};
++
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/s32cc.dtsi b/arch/arm64/boot/dts/freescale/s32cc.dtsi
+index 73421661625a..3029db019e4e 100644
+--- a/arch/arm64/boot/dts/freescale/s32cc.dtsi
++++ b/arch/arm64/boot/dts/freescale/s32cc.dtsi
+@@ -53,12 +53,6 @@ aliases {
+ 		i2c3 = &i2c3;
+ 		i2c4 = &i2c4;
+ 
+-		spi0 = &spi0;
+-		spi1 = &spi1;
+-		spi2 = &spi2;
+-		spi3 = &spi3;
+-		spi4 = &spi4;
+-		spi5 = &spi5;
+ 		spi6 = &qspi;
+ 	};
+ 
+@@ -120,7 +114,7 @@ scmi_rx_buf: shm@d0000080 {
+ 			reg = <0x0 0xd0000080 0x0 0x80>;
+ 			no-map;
+ 		};
+-
++		
+ 		hse_reserved: shm@84000000 {
+ 			compatible = "nxp,s32cc-hse-rmem";
+ 			reg = <0x0 0x84000000 0x0 0x400000>;	/* 4 MB */
+@@ -455,38 +449,6 @@ spi0: spi@401d4000 {
+ 			status = "disabled";
+ 		};
+ 
+-		spi1: spi@401d8000 {
+-			compatible = "nxp,s32cc-dspi";
+-			reg = <0x0 0x401d8000 0x0 0x1000>;
+-			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clks S32CC_SCMI_CLK_SPI_MODULE>;
+-			clock-names = "dspi";
+-			spi-num-chipselects = <5>;
+-			bus-num = <1>;
+-			spi-fifo-size = <5>;
+-			spi-cpol;
+-			spi-cpha;
+-			dmas = <&edma0 0 10>, <&edma0 0 11>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+-		spi2: spi@401dc000 {
+-			compatible = "nxp,s32cc-dspi";
+-			reg = <0x0 0x401dc000 0x0 0x1000>;
+-			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clks S32CC_SCMI_CLK_SPI_MODULE>;
+-			clock-names = "dspi";
+-			spi-num-chipselects = <5>;
+-			bus-num = <2>;
+-			spi-fifo-size = <5>;
+-			spi-cpol;
+-			spi-cpha;
+-			dmas = <&edma0 0 13>, <&edma0 0 14>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+ 		i2c0: i2c@401e4000 {
+ 			compatible = "nxp,s32cc-i2c";
+ 			reg = <0x0 0x401e4000 0x0 0x1000>;
+@@ -743,54 +705,6 @@ uart2: serial@402bc000 {
+ 			dma-names = "rx", "tx";
+ 		};
+ 
+-		spi3: spi@402c8000 {
+-			compatible = "nxp,s32cc-dspi";
+-			reg = <0x0 0x402c8000 0x0 0x1000>;
+-			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clks S32CC_SCMI_CLK_SPI_MODULE>;
+-			clock-names = "dspi";
+-			spi-num-chipselects = <5>;
+-			bus-num = <3>;
+-			spi-fifo-size = <5>;
+-			spi-cpol;
+-			spi-cpha;
+-			dmas = <&edma0 1 7>, <&edma0 1 8>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+-		spi4: spi@402cc000 {
+-			compatible = "nxp,s32cc-dspi";
+-			reg = <0x0 0x402cc000 0x0 0x1000>;
+-			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clks S32CC_SCMI_CLK_SPI_MODULE>;
+-			clock-names = "dspi";
+-			spi-num-chipselects = <5>;
+-			bus-num = <4>;
+-			spi-fifo-size = <5>;
+-			spi-cpol;
+-			spi-cpha;
+-			dmas = <&edma0 1 10>, <&edma0 1 11>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+-		spi5: spi@402d0000 {
+-			compatible = "nxp,s32cc-dspi";
+-			reg = <0x0 0x402d0000 0x0 0x1000>;
+-			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clks S32CC_SCMI_CLK_SPI_MODULE>;
+-			clock-names = "dspi";
+-			spi-num-chipselects = <5>;
+-			bus-num = <5>;
+-			spi-fifo-size = <5>;
+-			spi-cpol;
+-			spi-cpha;
+-			dmas = <&edma0 1 13>, <&edma0 1 14>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+ 		i2c3: i2c@402d8000 {
+ 			compatible = "nxp,s32cc-i2c";
+ 			reg = <0x0 0x402d8000 0x0 0x1000>;
+@@ -1136,3 +1050,4 @@ gic: interrupt-controller@50800000 {
+ 		};
+ 	};
+ };
++
+diff --git a/arch/arm64/boot/dts/freescale/s32r45-renan.dts b/arch/arm64/boot/dts/freescale/s32r45-renan.dts
+index 176234760835..5f3feb420ebc 100644
+--- a/arch/arm64/boot/dts/freescale/s32r45-renan.dts
++++ b/arch/arm64/boot/dts/freescale/s32r45-renan.dts
+@@ -10,7 +10,7 @@
+ 
+ /dts-v1/;
+ #include "s32r45.dtsi"
+-#include "s32cc-nxp-flash-macronix.dtsi"
++#include "s32cc-nxp-flash-issi.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+@@ -138,146 +138,6 @@ &pit1 {
+ &pinctrl {
+ 	status = "okay";
+ 
+-	dspi0_pins: dspi0 {
+-		dspi0_grp0 {
+-			pinmux = <S32CC_PINMUX(14, FUNC3)>,
+-			   <S32CC_PINMUX(6, FUNC2)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-		};
+-
+-		dspi0_grp1 {
+-			pinmux = <S32CC_PINMUX(132, FUNC0)>;
+-			input-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi0_grp2 {
+-			pinmux = <S32CC_PINMUX(7, FUNC2)>,
+-			   <S32CC_PINMUX(8, FUNC5)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi0_grp3 {
+-			pinmux = <S32CC_PINMUX(611, FUNC5)>;
+-		};
+-	};
+-
+-	dspi1_pins: dspi1_pins {
+-		dspi1_grp0 {
+-			pinmux = <S32CC_PINMUX(20, FUNC1)>,
+-			   <S32CC_PINMUX(22, FUNC1)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-		};
+-
+-		dspi1_grp1 {
+-			pinmux = <S32CC_PINMUX(21, FUNC0)>;
+-			input-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi1_grp2 {
+-			pinmux = <S32CC_PINMUX(23, FUNC1)>,
+-			   <S32CC_PINMUX(24, FUNC1)>,
+-			   <S32CC_PINMUX(35, FUNC1)>,
+-			   <S32CC_PINMUX(26, FUNC1)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi1_grp3 {
+-			pinmux = <S32CC_PINMUX(623, FUNC4)>;
+-		};
+-	};
+-
+-	dspi2_pins: dspi2_pins {
+-		dspi2_grp0 {
+-			pinmux = <S32CC_PINMUX(27, FUNC1)>,
+-			   <S32CC_PINMUX(29, FUNC1)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-		};
+-
+-		dspi2_grp1 {
+-			pinmux = <S32CC_PINMUX(30, FUNC1)>,
+-			   <S32CC_PINMUX(31, FUNC1)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi2_grp2 {
+-			pinmux = <S32CC_PINMUX(33, FUNC0)>;
+-			input-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi2_grp3 {
+-			pinmux = <S32CC_PINMUX(681, FUNC2)>;
+-		};
+-	};
+-
+-	dspi3_pins: dspi3_pins {
+-		dspi3_grp0 {
+-			pinmux = <S32CC_PINMUX(45, FUNC1)>,
+-			   <S32CC_PINMUX(36, FUNC1)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-		};
+-
+-		dspi3_grp1 {
+-			pinmux = <S32CC_PINMUX(38, FUNC1)>;
+-			input-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi3_grp2 {
+-			pinmux = <S32CC_PINMUX(39, FUNC1)>,
+-			   <S32CC_PINMUX(40, FUNC1)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi3_grp3 {
+-			pinmux = <S32CC_PINMUX(654, FUNC3)>;
+-		};
+-	};
+-
+-	dspi5_pins: dspi5_pins {
+-		dspi5_grp0 {
+-			pinmux = <S32CC_PINMUX(128, FUNC1)>,
+-			   <S32CC_PINMUX(53, FUNC3)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-		};
+-
+-		dspi5_grp1 {
+-			pinmux = <S32CC_PINMUX(133, FUNC4)>;
+-			input-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-			bias-pull-up;
+-		};
+-
+-		dspi5_grp2 {
+-			pinmux = <S32CC_PINMUX(131, FUNC3)>;
+-			output-enable;
+-			slew-rate = <S32CC_GPIO_3V3_SLEW_50MHZ>;
+-		};
+-
+-		dspi5_grp3 {
+-			pinmux = <S32CC_PINMUX(750, FUNC3)>;
+-		};
+-	};
+-
+ 	mdio2_pins: mdio2_pins {
+ 		mdio2_grp0 {
+ 			pinmux = <S32CC_PINMUX(60, FUNC1)>;
+@@ -305,8 +165,18 @@ rgmii2_grp0 {
+ 			 slew-rate = <S32CC_FAST_SLEW_166MHZ>;
+ 			 bias-pull-up;
+ 		 };
+-
++		 
+ 		 rgmii2_grp1 {
++			 pinmux = <S32CC_PINMUX(538, FUNC2)>,
++				<S32CC_PINMUX(529, FUNC2)>,
++				<S32CC_PINMUX(530, FUNC2)>,
++				<S32CC_PINMUX(531, FUNC2)>,
++				<S32CC_PINMUX(532, FUNC2)>,
++				<S32CC_PINMUX(533, FUNC2)>,
++				<S32CC_PINMUX(534, FUNC2)>;
++		 };
++		 
++		 rgmii2_grp2 {
+ 			 pinmux = <S32CC_PINMUX(67, FUNC1)>,
+ 				<S32CC_PINMUX(68, FUNC1)>,
+ 				<S32CC_PINMUX(69, FUNC1)>,
+@@ -316,7 +186,7 @@ rgmii2_grp1 {
+ 			 slew-rate = <S32CC_FAST_SLEW_166MHZ>;
+ 		 };
+ 
+-		 rgmii2_grp2 {
++		 rgmii2_grp3 {
+ 			 pinmux = <S32CC_PINMUX(72, FUNC1)>,
+ 				<S32CC_PINMUX(73, FUNC6)>,
+ 				<S32CC_PINMUX(74, FUNC6)>,
+@@ -327,15 +197,6 @@ rgmii2_grp2 {
+ 			 slew-rate = <S32CC_FAST_SLEW_166MHZ>;
+ 		 };
+ 
+-		 rgmii2_grp3 {
+-			 pinmux = <S32CC_PINMUX(538, FUNC2)>,
+-				<S32CC_PINMUX(529, FUNC2)>,
+-				<S32CC_PINMUX(530, FUNC2)>,
+-				<S32CC_PINMUX(531, FUNC2)>,
+-				<S32CC_PINMUX(532, FUNC2)>,
+-				<S32CC_PINMUX(533, FUNC2)>,
+-				<S32CC_PINMUX(534, FUNC2)>;
+-		 };
+ 	 };
+ 
+ 	/* From the schematics looks like GMAC1 does not have dedicated MDIO pins. */
+@@ -359,11 +220,11 @@ rgmii3_grp1 {
+ 
+ 		 rgmii3_grp2 {
+ 			 pinmux = <S32CC_PINMUX(113, FUNC1)>,
+-				<S32CC_PINMUX(114, FUNC2)>,
+-				<S32CC_PINMUX(115, FUNC1)>,
+-				<S32CC_PINMUX(116, FUNC1)>,
+-				<S32CC_PINMUX(117, FUNC1)>,
+-				<S32CC_PINMUX(118, FUNC2)>;
++				<S32CC_PINMUX(114, FUNC0)>,
++				<S32CC_PINMUX(115, FUNC0)>,
++				<S32CC_PINMUX(116, FUNC0)>,
++				<S32CC_PINMUX(117, FUNC0)>,
++				<S32CC_PINMUX(118, FUNC0)>;
+ 			 input-enable;
+ 			 slew-rate = <S32CC_FAST_SLEW_166MHZ>;
+ 		 };
+@@ -532,79 +393,6 @@ &edma1 {
+ 	status = "okay";
+ };
+ 
+-&spi0 {
+-	status = "okay";
+-};
+-
+-&spi1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&dspi1_pins>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	status = "okay";
+-
+-	spidev10: spidev@0 {
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <10000000>;
+-		reg = <0>;
+-		fsl,spi-cs-sck-delay = <100>;
+-		fsl,spi-sck-cs-delay = <100>;
+-	};
+-
+-	spidev11: spidev@1 {
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <10000000>;
+-		reg = <1>;
+-		fsl,spi-cs-sck-delay = <100>;
+-		fsl,spi-sck-cs-delay = <100>;
+-	};
+-};
+-
+-&spi2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&dspi2_pins>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	status = "okay";
+-
+-	spidev20: spidev@0 {
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <10000000>;
+-		reg = <0>;
+-		fsl,spi-cs-sck-delay = <100>;
+-		fsl,spi-sck-cs-delay = <100>;
+-	};
+-
+-	spidev21: spidev@1 {
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <10000000>;
+-		reg = <1>;
+-		fsl,spi-cs-sck-delay = <100>;
+-		fsl,spi-sck-cs-delay = <100>;
+-	};
+-};
+-
+-&spi3 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&dspi3_pins>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	status = "okay";
+-
+-	spidev3: spidev@0 {
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <4000000>;
+-		reg = <0>;
+-		fsl,spi-sck-cs-delay = <100>;
+-	};
+-};
+-
+-&spi5 {
+-	pinctrl-names = "default";
+-	pinctrl-0 =  <&dspi5_pins>;
+-	status = "okay";
+-};
+-
+ &usdhc0 {
+ 	no-1-8-v;
+ 	status = "okay";
+@@ -634,3 +422,4 @@ &gmac1 {
+ 	pinctrl-0 = <&rgmii3_pins>;
+ 	phy-handle = <&gmac1_phy1>;
+ };
++
+diff --git a/arch/arm64/boot/dts/freescale/s32r45.dtsi b/arch/arm64/boot/dts/freescale/s32r45.dtsi
+index 24b3e76a5ea5..2bff2a8353e1 100644
+--- a/arch/arm64/boot/dts/freescale/s32r45.dtsi
++++ b/arch/arm64/boot/dts/freescale/s32r45.dtsi
+@@ -10,6 +10,7 @@
+ 
+ #include "s32cc.dtsi"
+ #include <dt-bindings/clock/s32r45-scmi-clock.h>
++#include <dt-bindings/reset/s32r45-scmi-reset.h>
+ #include <dt-bindings/mux/nxp-s32r45-can-ts.h>
+ #include <dt-bindings/nvmem/s32r45-gpr-nvmem.h>
+ #include <dt-bindings/thermal/thermal.h>
+@@ -533,11 +534,109 @@ analog_ips {
+ 			thermal-sensors = <&tmu 2>;
+ 		};
+ 	};
+-};
+ 
+-&ddr_errata {
+-	memory-region = <&ddr_errata_reserved>;
+-	status = "okay";
++	lax0: lax@0x44028000 {
++		compatible = "nxp,lax";
++		reg = <0 0x44028000 0 0x718>;
++
++		dbgregstart = <0x0 0x51101000>;
++		dbgreglen = <0x1000>;
++
++		resets = <&reset S32R45_SCMI_RST_LAX>;
++		reset-names = "lax_reset";
++
++		clocks = <&clks S32R45_SCMI_CLK_LAX_0_MODULE>;
++		clock-names = "lax_module_clk";
++
++		laxdev-id  = <0>;
++		interrupts = <0 234 0x4>,
++					<0 233 0x4>;
++		status = "disabled";
++	};
++
++	lax1: lax@0x44029000 {
++		compatible = "nxp,lax";
++		reg = <0 0x44029000 0 0x718> ;
++
++		dbgregstart = <0x0 0x51101000> ;
++		dbgreglen = <0x1000>;
++
++		clocks = <&clks S32R45_SCMI_CLK_LAX_1_MODULE>;
++		clock-names = "lax_module_clk";
++
++		laxdev-id = <1>;
++		interrupts = <0 238 0x4>,
++					<0 232 0x4>;
++		status = "disabled";
++	};
++
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		oalddr0_allocator_memory: oalddrmem0@0x8B000000 {
++			/* 512 MB */
++			reg = <0x0 0x8B000000 0x0 0x15000000>;
++			no-map;
++		};
++		
++		oal_sram_allocator: oal_sram_allocator@0x34140000 {
++			reg = <0x00 0x34140000 0x0 0x000C0000>;
++			no-map;
++		};
++
++		oal_dsp_tcm_allocator: oal_dsp_tcm_allocator@0x24140000 {
++			reg = <0x00 0x24140000 0x0 0x00060000>;
++			no-map;
++		};
++
++		oal_cb_ram_allocator: oal_cb_ram_allocator@0x28000000 {
++			reg = <0x00 0x28000000 0x0 0x00040000>;
++			no-map;
++		};
++		radar_ddr_memory_region: radar_ddr_memory@0x85001000 {
++			/* 64 MB */
++			reg = <0x0 0x85001000 0x0 0x4000000>;
++			no-map;
++		};
++	};
++
++
++	oalddrmem0: oalddrmem0@0x8B000000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x0 0x8B000000 0x0 0x15000000>;
++		memory-region = <&oalddr0_allocator_memory>;
++		id = <0>;
++		align = <0x1000>;
++		autobalance;
++	};
++
++	oalmem0: oalmem0@0x34140000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x34000000 0x0 0x000C0000>;
++		memory-region = <&oal_sram_allocator>;
++		id = <1>;
++		align = <0x1000>;
++		init;
++	};
++
++	oaldsptcmmem0: oaldsptcmmem0@0x24140000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x24140000 0x0 0x00060000>;
++		memory-region = <&oal_dsp_tcm_allocator>;
++		id = <2>;
++		align = <0x100>;
++	};
++
++	oalcbrammem0: oalcbrammem0@0xBC000000 {
++		compatible = "fsl,oal-mem-reg";
++		reg = <0x00 0x28000000 0x0 0x00040000>;
++		memory-region = <&oal_cb_ram_allocator>;
++		id = <3>;
++		align = <0x100>;
++	};
++
+ };
+ 
+ &pcie0 {
+@@ -611,6 +710,11 @@ sd0_default_grp3 {
+ 	};
+ };
+ 
++&ddr_errata {
++	memory-region = <&ddr_errata_reserved>;
++	status = "okay";
++};
++
+ &ocotp {
+ 	compatible = "nxp,s32r45-ocotp";
+ };
+@@ -649,3 +753,17 @@ gmac1_phy_intf_sel: gmac1_phy_intf_sel@100 {
+ 			S32R45_GPR_CELL_SIZE>;
+ 	};
+ };
++
++&pcie0 {
++	status = "okay";
++};
++
++&lax0 {
++	status = "okay";
++};
++
++&lax1 {
++	status = "okay";
++};
++
++

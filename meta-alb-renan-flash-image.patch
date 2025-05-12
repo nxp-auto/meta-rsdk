@@ -1,0 +1,17 @@
+diff --git a/meta-alb-bsp/conf/machine/s32r45renan.conf b/meta-alb-bsp/conf/machine/s32r45renan.conf
+index 3a450d7d..2f12b51e 100644
+--- a/meta-alb-bsp/conf/machine/s32r45renan.conf
++++ b/meta-alb-bsp/conf/machine/s32r45renan.conf
+@@ -8,9 +8,9 @@
+ require conf/machine/include/s32r45.inc
+ 
+ TFA_PLAT = "s32r45renan"
+-BOOT_TYPE = "sdcard"
+ 
+ UBOOT_DEFCONFIG = "s32r45renan_defconfig"
+-
++UBOOT_FLASH_DEFCONFIG = "s32r45renan_qspi_defconfig"
+ KERNEL_DEVICETREE ?= "freescale/s32r45-renan.dtb"
+-UBOOT_CONFIG:remove = "qspi "
++
++FLASHIMAGE_DTB_FILE = "s32r45-renan.${FLASHIMAGE_DTB_SUFFIX}"

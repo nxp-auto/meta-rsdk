@@ -1,0 +1,11 @@
+#
+#   Copyright 2021-2023 NXP
+#   General definitions for RSDK layer environment
+#
+
+# KERNEL_SRC is the path necessary to build modules out of tree
+KERNEL_SRC ?= "${TOPDIR}/tmp/work/s32r45renan-fsl-linux/linux-s32/5.15.167-r0/build"
+
+# supplementary build parameter necessary to the RSDK modules built
+EXTRA_OEMAKE += " KERNEL_DIR=${KERNEL_SRC}"
+
